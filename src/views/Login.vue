@@ -1,31 +1,33 @@
 <template>
-  <div>
-    <form>
-      <h2 class="sr-only">Login</h2>
-      <div class="form-group">
-        <input
-          autocomplete="off"
-          class="form-control"
-          type="text"
-          name="text"
-          placeholder="Username"
-        />
-      </div>
-      <div class="form-group">
-        <input
-          autocomplete="off"
-          class="form-control"
-          type="password"
-          name="password"
-          placeholder="Password"
-        />
-      </div>
-      <div class="form-group">
-        <button class="btn btn-primary btn-block">Log In</button>
-      </div>
-      <a class="links" href="signup">Don't have an account yet? Sign up!</a>
-      <a class="links" href="forgot">Forgot your username or password?</a>
-    </form>
+  <div class="form">
+    <h2 class="sr-only">Login</h2>
+    <div class="form-group">
+      <input
+        v-model="user.username"
+        autocomplete="off"
+        class="form-control"
+        type="text"
+        name="text"
+        placeholder="Username"
+        @keyup.enter="login"
+      />
+    </div>
+    <div class="form-group">
+      <input
+        v-model="user.password"
+        autocomplete="off"
+        class="form-control"
+        type="password"
+        name="password"
+        placeholder="Password"
+        @keyup.enter="login"
+      />
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary btn-block" @click="login">Log In</button>
+    </div>
+    <a class="links" href="signup">Don't have an account yet? Sign up!</a>
+    <a class="links" href="forgot">Forgot your username or password?</a>
   </div>
 </template>
 
@@ -33,13 +35,41 @@
 export default {
   name: "Login",
   data() {
-    return {};
+    return {
+      user: {
+        username: "",
+        password: "",
+      },
+    };
+  },
+  methods: {
+    login: function () {
+      this.axios
+        .post("/users/authenticate", this.user)
+        .then((response) => {
+          sessionStorage.setItem("userId", response.data.userId);
+          sessionStorage.setItem("key", response.data.key);
+          sessionStorage.setItem("authenticated", true);
+          this.$router.push("reminder");
+        })
+        .catch((error) => {
+          this.user.username = "";
+          this.user.password = "";
+          if (error.response.status == 401) {
+            console.log("Wrong username or password!");
+          } else if (error.response.status == 500) {
+            console.log("Internal server error");
+          } else {
+            console.log(error.response);
+          }
+        });
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-form {
+.form {
   max-width: 320px;
   height: 443px;
   width: 90%;
