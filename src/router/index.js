@@ -4,8 +4,11 @@ import Login from '../views/Login.vue'
 import Signup from '../views/Signup.vue'
 import Forgot from '../views/Forgot.vue'
 import Reminder from '../views/Reminder.vue'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 
 Vue.use(VueRouter)
+Vue.use(VueAxios, axios)
 
 const routes = [
   {
