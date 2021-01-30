@@ -3,29 +3,32 @@
     <h2 class="sr-only">Sign Up</h2>
     <div class="form-group">
       <input
+        id="emailInput"
         v-model="user.email"
         autocomplete="off"
         class="form-control"
         type="text"
         placeholder="Email"
-        @keyup.enter="checkEmail"
+        @keyup.enter="signup"
+        @input="checkEmail"
       />
     </div>
     <div class="form-group">
       <input
+        id="passwordInput"
         v-model="user.password"
         autocomplete="off"
         class="form-control"
         type="password"
         name="password"
         placeholder="Password"
-        @keyup.enter="checkEmail"
+        @keyup.enter="signup"
+        @input="checkPassword"
       />
+      <p id="errorText">Error</p>
     </div>
     <div class="form-group">
-      <button class="btn btn-primary btn-block" @click="signup">
-        Create account
-      </button>
+      <button class="btn btn-primary btn-block" @click="signup">Create account</button>
     </div>
     <a class="links" href="login">Already have an account? Log in!</a>
   </div>
@@ -40,36 +43,79 @@ export default {
         email: "",
         password: "",
       },
+      errorBorder: null,
+      errorBorder2: null,
+      errorText: null,
       validEmail: false,
+      validPassword: false,
     };
+  },
+  mounted() {
+    this.errorBorder = document.getElementById("emailInput");
+    this.errorBorder2 = document.getElementById("passwordInput");
+    this.errorText = document.getElementById("errorText");
   },
   methods: {
     checkEmail: function () {
+      this.errorText.style.visibility = "hidden";
       this.axios
         .post("/users/check", this.user)
         .then(() => {
-          this.validEmail = true;
+          if (
+            /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+              this.user.email
+            )
+          ) {
+            this.errorBorder.style.borderBottom = "1px solid green";
+            this.validEmail = true;
+          } else {
+            this.errorBorder.style.borderBottom = "1px solid red";
+            this.validEmail = false;
+          }
         })
         .catch(() => {
+          this.errorBorder.style.borderBottom = "1px solid red";
           this.validEmail = false;
         });
     },
+    checkPassword: function () {
+      this.errorText.style.visibility = "hidden";
+      if (this.user.password.length > 9) {
+        this.errorBorder2.style.borderBottom = "1px solid green";
+        this.validPassword = true;
+      } else {
+        this.errorBorder2.style.borderBottom = "1px solid red";
+        this.validPassword = false;
+      }
+    },
     signup: function () {
-      if (this.validEmail)
+      if (this.validEmail && this.validPassword) {
         this.axios
           .post("/users", this.user)
           .then(() => {
             this.$router.push("login");
           })
           .catch((error) => {
+            this.errorBorder.style.borderBottom = "1px solid red";
+            this.errorBorder2.style.borderBottom = "1px solid red";
+            this.errorText.style.visibility = "visible";
             if (error.response.status == 409) {
-              console.log("Email is already taken!");
+              this.errorText.innerHTML = "Email is already taken!";
             } else if (error.response.status == 500) {
-              console.log("Internal server error");
+              this.errorText.innerHTML = "Internal server error...";
             } else {
-              console.log(error.response);
+              this.errorText.innerHTML = "An error has occured...";
             }
           });
+      } else {
+        this.user.password = "";
+        this.errorText.innerHTML = "Enter valid credentials!";
+        if (!this.validEmail) {
+          this.errorBorder.style.borderBottom = "1px solid red";
+          this.errorBorder2.style.borderBottom = "1px solid red";
+        }
+        this.errorText.style.visibility = "visible";
+      }
     },
   },
 };
@@ -96,6 +142,12 @@ export default {
   }
   .form-group {
     padding-bottom: 15px;
+    p {
+      text-align: center;
+      margin: 0;
+      color: red;
+      visibility: hidden;
+    }
   }
   .form-control {
     text-align: center;

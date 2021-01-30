@@ -3,16 +3,19 @@
     <h2 class="sr-only">Login</h2>
     <div class="form-group">
       <input
+        id="emailInput"
         v-model="user.email"
         autocomplete="off"
         class="form-control"
         type="text"
         placeholder="Email"
         @keyup.enter="login"
+        @input="resetErrorColors"
       />
     </div>
     <div class="form-group">
       <input
+        id="passwordInput"
         v-model="user.password"
         autocomplete="off"
         class="form-control"
@@ -20,7 +23,9 @@
         name="password"
         placeholder="Password"
         @keyup.enter="login"
+        @input="resetErrorColors"
       />
+      <p id="errorText">Error</p>
     </div>
     <div class="form-group">
       <button class="btn btn-primary btn-block" @click="login">Log In</button>
@@ -39,7 +44,15 @@ export default {
         email: "",
         password: "",
       },
+      errorBorder: null,
+      errorBorder2: null,
+      errorText: null,
     };
+  },
+  mounted() {
+    this.errorBorder = document.getElementById("emailInput");
+    this.errorBorder2 = document.getElementById("passwordInput");
+    this.errorText = document.getElementById("errorText");
   },
   methods: {
     login: function () {
@@ -52,16 +65,23 @@ export default {
           this.$router.push("reminder");
         })
         .catch((error) => {
-          this.user.email = "";
+          this.errorBorder.style.borderBottom = "1px solid red";
+          this.errorBorder2.style.borderBottom = "1px solid red";
+          this.errorText.style.visibility = "visible";
           this.user.password = "";
           if (error.response.status == 401) {
-            console.log("Wrong username or password!");
+            this.errorText.innerHTML = "Incorrect credentials!";
           } else if (error.response.status == 500) {
-            console.log("Internal server error");
+            this.errorText.innerHTML = "Internal server error...";
           } else {
-            console.log(error.response);
+            this.errorText.innerHTML = "An error has occured...";
           }
         });
+    },
+    resetErrorColors: function () {
+      this.errorBorder.style.borderBottom = "1px solid #434a52";
+      this.errorBorder2.style.borderBottom = "1px solid #434a52";
+      this.errorText.style.visibility = "hidden";
     },
   },
 };
@@ -88,6 +108,12 @@ export default {
   }
   .form-group {
     padding-bottom: 15px;
+    p {
+      text-align: center;
+      margin: 0;
+      color: red;
+      visibility: hidden;
+    }
   }
   .form-control {
     text-align: center;
@@ -105,7 +131,7 @@ export default {
     border-radius: 4px;
     padding: 11px;
     box-shadow: none;
-    margin-top: 26px;
+    margin-top: 10px;
     text-shadow: none;
     outline: none;
     width: 100%;

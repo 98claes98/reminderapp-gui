@@ -1,24 +1,23 @@
 <template>
-  <div>
-    <form>
-      <h2 class="sr-only">Recover Account</h2>
-      <div class="form-group">
-        <input
-          v-model="user.email"
-          autocomplete="off"
-          class="form-control"
-          type="text"
-          placeholder="Email"
-          @keyup.enter="recoverAccount"
-        />
-      </div>
-      <div class="form-group">
-        <button class="btn btn-primary btn-block" @click="recoverAccount">
-          Recover account
-        </button>
-      </div>
-      <a class="links" href="login">Remember your details? Log in!</a>
-    </form>
+  <div class="form">
+    <h2 class="sr-only">Recover Account</h2>
+    <div class="form-group">
+      <input
+        id="emailInput"
+        v-model="user.email"
+        autocomplete="off"
+        class="form-control"
+        type="text"
+        placeholder="Email"
+        @input="resetErrorColors"
+        @keyup.enter="recoverAccount"
+      />
+      <p id="errorText">Error</p>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary btn-block" @click="recoverAccount">Recover account</button>
+    </div>
+    <a class="links" href="login">Remember your details? Log in!</a>
   </div>
 </template>
 
@@ -30,7 +29,13 @@ export default {
       user: {
         email: "",
       },
+      errorBorder: null,
+      errorText: null,
     };
+  },
+  mounted() {
+    this.errorBorder = document.getElementById("emailInput");
+    this.errorText = document.getElementById("errorText");
   },
   methods: {
     recoverAccount: function () {
@@ -40,21 +45,27 @@ export default {
           this.$router.push("login");
         })
         .catch((error) => {
+          this.errorBorder.style.borderBottom = "1px solid red";
+          this.errorText.style.visibility = "visible";
           if (error.response.status == 404) {
-            console.log("That email doesn't exist");
+            this.errorText.innerHTML = "This email doesn't exist!";
           } else if (error.response.status == 500) {
-            console.log("Internal server error");
+            this.errorText.innerHTML = "Internal server error...";
           } else {
-            console.log(error.response);
+            this.errorText.innerHTML = "An error has occured...";
           }
         });
+    },
+    resetErrorColors: function () {
+      this.errorBorder.style.borderBottom = "1px solid #434a52";
+      this.errorText.style.visibility = "hidden";
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-form {
+.form {
   max-width: 320px;
   height: 443px;
   width: 90%;
@@ -74,6 +85,12 @@ form {
   }
   .form-group {
     padding-bottom: 15px;
+    p {
+      text-align: center;
+      margin: 0;
+      color: red;
+      visibility: hidden;
+    }
   }
   .form-control {
     text-align: center;
@@ -110,7 +127,7 @@ form {
     color: #6f7a85;
     opacity: 0.9;
     text-decoration: none;
-    padding-top: 50px;
+    padding-top: 30px;
   }
 
   .links:hover,
