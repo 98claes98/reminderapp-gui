@@ -1,39 +1,33 @@
 <template>
-  <div>
-    <form>
-      <h2 class="sr-only">Sign Up</h2>
-      <div class="form-group">
-        <input
-          autocomplete="off"
-          class="form-control"
-          type="email"
-          name="email"
-          placeholder="Email"
-        />
-      </div>
-      <div class="form-group">
-        <input
-          autocomplete="off"
-          class="form-control"
-          type="text"
-          name="text"
-          placeholder="Username"
-        />
-      </div>
-      <div class="form-group">
-        <input
-          autocomplete="off"
-          class="form-control"
-          type="password"
-          name="password"
-          placeholder="Password"
-        />
-      </div>
-      <div class="form-group">
-        <button class="btn btn-primary btn-block">Create account</button>
-      </div>
-      <a class="links" href="login">Already have an account? Log in!</a>
-    </form>
+  <div class="form">
+    <h2 class="sr-only">Sign Up</h2>
+    <div class="form-group">
+      <input
+        v-model="user.email"
+        autocomplete="off"
+        class="form-control"
+        type="text"
+        placeholder="Email"
+        @keyup.enter="checkEmail"
+      />
+    </div>
+    <div class="form-group">
+      <input
+        v-model="user.password"
+        autocomplete="off"
+        class="form-control"
+        type="password"
+        name="password"
+        placeholder="Password"
+        @keyup.enter="checkEmail"
+      />
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary btn-block" @click="signup">
+        Create account
+      </button>
+    </div>
+    <a class="links" href="login">Already have an account? Log in!</a>
   </div>
 </template>
 
@@ -41,13 +35,48 @@
 export default {
   name: "Signup",
   data() {
-    return {};
+    return {
+      user: {
+        email: "",
+        password: "",
+      },
+      validEmail: false,
+    };
+  },
+  methods: {
+    checkEmail: function () {
+      this.axios
+        .post("/users/check", this.user)
+        .then(() => {
+          this.validEmail = true;
+        })
+        .catch(() => {
+          this.validEmail = false;
+        });
+    },
+    signup: function () {
+      if (this.validEmail)
+        this.axios
+          .post("/users", this.user)
+          .then(() => {
+            this.$router.push("login");
+          })
+          .catch((error) => {
+            if (error.response.status == 409) {
+              console.log("Email is already taken!");
+            } else if (error.response.status == 500) {
+              console.log("Internal server error");
+            } else {
+              console.log(error.response);
+            }
+          });
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-form {
+.form {
   max-width: 320px;
   height: 443px;
   width: 90%;

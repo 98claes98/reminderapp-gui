@@ -4,15 +4,18 @@
       <h2 class="sr-only">Recover Account</h2>
       <div class="form-group">
         <input
+          v-model="user.email"
           autocomplete="off"
           class="form-control"
-          type="email"
-          name="email"
+          type="text"
           placeholder="Email"
+          @keyup.enter="recoverAccount"
         />
       </div>
       <div class="form-group">
-        <button class="btn btn-primary btn-block">Recover account</button>
+        <button class="btn btn-primary btn-block" @click="recoverAccount">
+          Recover account
+        </button>
       </div>
       <a class="links" href="login">Remember your details? Log in!</a>
     </form>
@@ -23,7 +26,29 @@
 export default {
   name: "Forgot",
   data() {
-    return {};
+    return {
+      user: {
+        email: "",
+      },
+    };
+  },
+  methods: {
+    recoverAccount: function () {
+      this.axios
+        .post("/users/recover", this.user)
+        .then(() => {
+          this.$router.push("login");
+        })
+        .catch((error) => {
+          if (error.response.status == 404) {
+            console.log("That email doesn't exist");
+          } else if (error.response.status == 500) {
+            console.log("Internal server error");
+          } else {
+            console.log(error.response);
+          }
+        });
+    },
   },
 };
 </script>

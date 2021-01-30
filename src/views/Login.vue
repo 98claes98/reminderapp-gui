@@ -3,12 +3,11 @@
     <h2 class="sr-only">Login</h2>
     <div class="form-group">
       <input
-        v-model="user.username"
+        v-model="user.email"
         autocomplete="off"
         class="form-control"
         type="text"
-        name="text"
-        placeholder="Username"
+        placeholder="Email"
         @keyup.enter="login"
       />
     </div>
@@ -37,7 +36,7 @@ export default {
   data() {
     return {
       user: {
-        username: "",
+        email: "",
         password: "",
       },
     };
@@ -53,7 +52,7 @@ export default {
           this.$router.push("reminder");
         })
         .catch((error) => {
-          this.user.username = "";
+          this.user.email = "";
           this.user.password = "";
           if (error.response.status == 401) {
             console.log("Wrong username or password!");
