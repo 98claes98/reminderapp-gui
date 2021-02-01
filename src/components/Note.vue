@@ -4,7 +4,9 @@
       <div class="col">
         <div class="row text-center">
           <div class="col">
-            <h2>{{title}}</h2>
+            <h2>
+              <u>{{title}}</u>
+            </h2>
           </div>
         </div>
         <div v-if="description" class="row text-center">

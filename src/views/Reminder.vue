@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <div class="row justify-content-center">
-      <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3 col-xxl-3">
+      <div class="col-sm-6 col-md-6 col-lg-5 col-xl-5 col-xxl-4">
         <div class="row p-3" v-for="reminder in todoList" :key="reminder.id">
           <Note :title="reminder.title" :description="reminder.description" :date="reminder.datetime" />
         </div>
       </div>
-      <div class="col-sm-6 col-md-5 col-lg-5 col-xl-4 col-xxl-3 offset-md-1 offset-lg-2 offset-xl-2 offset-xxl-2">
+      <div class="col-sm-6 col-md-6 col-lg-5 col-xl-5 col-xxl-4 offset-lg-2 offset-xl-2 offset-xxl-2">
         <div class="row p-3" v-for="reminder in doneList" :key="reminder.id">
           <Note :title="reminder.title" :description="reminder.description" :date="reminder.datetime" />
         </div>

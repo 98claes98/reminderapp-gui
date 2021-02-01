@@ -93,7 +93,9 @@ export default {
   height: 443px;
   width: 90%;
   background-color: #1e2833;
-  padding: 60px;
+  padding-top: 60px;
+  padding-left: 10px;
+  padding-right: 10px;
   border-radius: 4px;
   transform: translate(-50%, -50%);
   position: absolute;
