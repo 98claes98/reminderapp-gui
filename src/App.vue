@@ -5,7 +5,9 @@
 </template>
 
 <style lang="scss">
+@import url("https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap");
 body {
+  font-family: "Gloria Hallelujah", Helvetica, Arial, sans-serif;
   background: url("./assets/background.jpg") no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
