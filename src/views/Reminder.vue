@@ -23,7 +23,7 @@
         </div>
       </nav>
       <div class="row justify-content-center pt-2">
-        <div class="col-sm-6 col-md-6 col-lg-5 col-xl-5 col-xxl-4">
+        <div class="col-sm-12 col-md-6 col-lg-5 col-xl-5 col-xxl-4">
           <div class="listTitle text-center"><h2>Todo</h2></div>
           <div
             class="row p-3 reminderBox"
@@ -43,7 +43,7 @@
           </div>
         </div>
         <div
-          class="col-sm-6 col-md-6 col-lg-5 col-xl-5 col-xxl-4 offset-lg-2 offset-xl-2 offset-xxl-2"
+          class="col-sm-12 col-md-6 col-lg-5 col-xl-5 col-xxl-4 offset-lg-2 offset-xl-2 offset-xxl-2"
         >
           <div class="listTitle text-center"><h2>Done</h2></div>
           <div
