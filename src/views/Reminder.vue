@@ -3,6 +3,17 @@
     <div id="addReminderOverlay">
       <NewNote @added="newReminderAdded" @closed="hideAddReminderBox" />
     </div>
+    <div id="updateReminderOverlay">
+      <EditNote
+        :id="clickedReminder.id"
+        :title="clickedReminder.title || ''"
+        :description="clickedReminder.description || ''"
+        :datetime="clickedReminder.datetime || ''"
+        :userId="clickedReminder.userId"
+        @updated="reminderUpdated"
+        @closed="hideUpdateReminderBox"
+      />
+    </div>
     <div class="container">
       <nav class="navbar pt-4">
         <div class="container-fluid justify-content-center">
@@ -14,11 +25,20 @@
       <div class="row justify-content-center pt-2">
         <div class="col-sm-6 col-md-6 col-lg-5 col-xl-5 col-xxl-4">
           <div class="listTitle text-center"><h2>Todo</h2></div>
-          <div class="row p-3" v-for="reminder in todoList" :key="reminder.id">
+          <div
+            class="row p-3 reminderBox"
+            v-for="reminder in todoList"
+            :key="reminder.id"
+          >
             <Note
+              @clickUpdate="showUpdateReminderBox"
+              @changedFinished="fetchReminders"
+              @deletedReminder="fetchReminders"
+              :id="reminder.id"
               :title="reminder.title"
               :description="reminder.description"
               :date="reminder.datetime"
+              :finished="reminder.finished"
             />
           </div>
         </div>
@@ -26,11 +46,20 @@
           class="col-sm-6 col-md-6 col-lg-5 col-xl-5 col-xxl-4 offset-lg-2 offset-xl-2 offset-xxl-2"
         >
           <div class="listTitle text-center"><h2>Done</h2></div>
-          <div class="row p-3" v-for="reminder in doneList" :key="reminder.id">
+          <div
+            class="row p-3 reminderBox"
+            v-for="reminder in doneList"
+            :key="reminder.id"
+          >
             <Note
+              @clickUpdate="showUpdateReminderBox"
+              @changedFinished="fetchReminders"
+              @deletedReminder="fetchReminders"
+              :id="reminder.id"
               :title="reminder.title"
               :description="reminder.description"
               :date="reminder.datetime"
+              :finished="reminder.finished"
             />
           </div>
         </div>
@@ -43,20 +72,27 @@
 <script>
 import Note from "../components/Note.vue";
 import NewNote from "../components/NewNote.vue";
+import EditNote from "../components/EditNote.vue";
 export default {
   components: {
     Note,
     NewNote,
+    EditNote,
   },
   data() {
     return {
       todoList: [],
       doneList: [],
       addReminderOverlay: null,
+      updateReminderOverlay: null,
+      clickedReminder: {},
     };
   },
   mounted() {
     this.addReminderOverlay = document.getElementById("addReminderOverlay");
+    this.updateReminderOverlay = document.getElementById(
+      "updateReminderOverlay"
+    );
     this.fetchReminders();
   },
   methods: {
@@ -78,8 +114,6 @@ export default {
               this.todoList.push(item);
             }
           });
-          console.log(this.todoList);
-          console.log(this.doneList);
         })
         .catch((error) => {
           console.log(error);
@@ -89,11 +123,26 @@ export default {
       this.hideAddReminderBox();
       this.fetchReminders();
     },
+    reminderUpdated: function () {
+      this.hideUpdateReminderBox();
+      this.fetchReminders();
+    },
     showAddReminderBox: function () {
       this.addReminderOverlay.style.visibility = "visible";
     },
     hideAddReminderBox: function () {
       this.addReminderOverlay.style.visibility = "hidden";
+    },
+    showUpdateReminderBox: function (id) {
+      let reminder = this.todoList
+        .concat(this.doneList)
+        .find((e) => e.id == id);
+      this.clickedReminder = reminder;
+      this.updateReminderOverlay.style.visibility = "visible";
+    },
+    hideUpdateReminderBox: function () {
+      this.clickedReminder = {};
+      this.updateReminderOverlay.style.visibility = "hidden";
     },
   },
 };
@@ -109,8 +158,9 @@ export default {
   font-size: 16px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  transition: background-color 0.6s ease;
+  transition: background-color 0.6s ease, transform 0.1s ease-in-out;
   &:hover {
+    transform: scale(1.05);
     background: darken(#fc6e51, 10%);
   }
 }
@@ -122,7 +172,22 @@ export default {
   z-index: 9999;
 }
 
+#updateReminderOverlay {
+  visibility: hidden;
+  position: fixed;
+  display: block;
+  z-index: 9999;
+}
+
 .listTitle {
   color: whitesmoke;
+}
+
+.reminderBox {
+  transition: transform 0.1s ease-in-out;
+  &:hover {
+    color: rgb(0, 0, 0);
+    transform: scale(1.05);
+  }
 }
 </style>

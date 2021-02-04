@@ -6,15 +6,15 @@
           <input
             spellcheck="false"
             autocomplete="off"
-            id="titleBox"
+            id="editTitleBox"
             maxlength="20"
-            v-model="reminder.title"
+            v-model="dtitle"
             type="text"
             class="form-control"
             aria-describedby="titleInput"
             placeholder="Title"
           />
-          <span id="titleCount">{{ reminder.title.length }}/20</span>
+          <span id="titleCount">{{ dtitle.length }}/20</span>
         </div>
       </div>
       <div class="row text-center py-1">
@@ -23,22 +23,20 @@
             spellcheck="false"
             autocomplete="off"
             maxlength="100"
-            v-model="reminder.description"
+            v-model="ddescription"
             type="text"
             class="form-control"
             aria-describedby="descriptionInput"
             placeholder="Description (not required)"
           />
-          <span id="descriptionCount"
-            >{{ reminder.description.length }}/100</span
-          >
+          <span id="descriptionCount">{{ ddescription.length }}/100</span>
         </div>
       </div>
       <div class="row text-center py-3">
         <div class="col">
           <datetime
             type="datetime"
-            v-model="reminder.datetime"
+            v-model="ddatetime"
             placeholder="Select date (not required)"
             auto-continue
           ></datetime>
@@ -46,8 +44,8 @@
       </div>
       <div class="row text-center mt-auto pb-4">
         <div class="col">
-          <button type="button" class="btn" @click="addReminder">
-            Add reminder
+          <button type="button" class="btn" @click="updateReminder">
+            Update reminder
           </button>
         </div>
         <div class="col">
@@ -59,48 +57,71 @@
 </template>
 <script>
 export default {
+  props: ["id", "title", "description", "datetime", "userId"],
+
   data() {
     return {
-      reminder: {
-        title: "",
-        description: "",
-        datetime: "",
-        finished: "false",
-        userId: sessionStorage.getItem("userId"),
-      },
+      did: this.id,
+      dtitle: this.title,
+      ddescription: this.description,
+      ddatetime: this.datetime,
+      duserId: this.userId,
+      timeInit: this.datetime,
     };
   },
+  watch: {
+    id: function (value) {
+      this.did = value;
+      this.update();
+    },
+    title: function (value) {
+      this.dtitle = value;
+    },
+    description: function (value) {
+      this.ddescription = value;
+    },
+    datetime: function (value) {
+      this.ddatetime = value;
+    },
+    userId: function (value) {
+      this.duserId = value;
+    },
+  },
   methods: {
-    addReminder: function () {
+    update() {
+      this.dtitle = this.title;
+      this.ddescription = this.description;
+      this.ddatetime = this.datetime;
+      this.duserId = this.userId;
+    },
+    updateReminder: function () {
       if (this.titleIsValid) {
         this.axios
-          .post(
-            "/reminders?key=" + sessionStorage.getItem("key"),
-            this.reminder
-          )
+          .put("/reminders?key=" + sessionStorage.getItem("key"), {
+            id: this.did,
+            title: this.dtitle,
+            description: this.ddescription,
+            datetime: this.ddatetime,
+            userId: this.duserId,
+          })
           .then(() => {
-            this.reminder.title = "";
-            this.reminder.description = "";
-            this.reminder.datetime = "";
-            this.$emit("added");
+            this.$emit("updated");
           })
           .catch((error) => {
             console.log(error.response);
           });
       } else {
-        document.getElementById("titleBox").style.border = "2px solid #ff0000";
+        document.getElementById("editTitleBox").style.border =
+          "2px solid #ff0000";
       }
     },
     close: function () {
-      this.reminder.title = "";
-      this.reminder.description = "";
-      this.reminder.datetime = "";
       this.$emit("closed");
     },
   },
   computed: {
     titleIsValid: function () {
-      return this.reminder.title != "";
+      return this.dtitle != "";
     },
   },
 };
@@ -140,7 +161,7 @@ export default {
   }
 }
 
-#titleBox {
+#editTitleBox {
   text-align: center;
   box-shadow: none;
 }
