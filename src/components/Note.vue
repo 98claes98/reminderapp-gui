@@ -1,13 +1,13 @@
 <template>
   <div class="container-fluid" id="noteBox">
-    <div class="row text-center">
+    <div class="row text-center py-3">
       <div class="col">
         <h2>
           <u>{{ title }}</u>
         </h2>
       </div>
     </div>
-    <div v-if="description" class="row text-center">
+    <div v-if="description" class="row text-center px-4">
       <div class="col">
         <p>{{ description }}</p>
       </div>
@@ -16,9 +16,6 @@
       <div class="col">
         <p id="date">
           {{ localDate }}
-        </p>
-        <p id="date">
-          {{ date }}
         </p>
       </div>
     </div>

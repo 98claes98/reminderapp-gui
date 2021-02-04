@@ -4,15 +4,16 @@
       <NewNote @added="newReminderAdded" @closed="hideAddReminderBox" />
     </div>
     <div class="container">
-      <nav class="navbar sticky-top pt-4">
+      <nav class="navbar pt-4">
         <div class="container-fluid justify-content-center">
           <button type="button" class="btn" @click="showAddReminderBox">
             New reminder...
           </button>
         </div>
       </nav>
-      <div class="row justify-content-center">
+      <div class="row justify-content-center pt-2">
         <div class="col-sm-6 col-md-6 col-lg-5 col-xl-5 col-xxl-4">
+          <div class="listTitle text-center"><h2>Todo</h2></div>
           <div class="row p-3" v-for="reminder in todoList" :key="reminder.id">
             <Note
               :title="reminder.title"
@@ -24,6 +25,7 @@
         <div
           class="col-sm-6 col-md-6 col-lg-5 col-xl-5 col-xxl-4 offset-lg-2 offset-xl-2 offset-xxl-2"
         >
+          <div class="listTitle text-center"><h2>Done</h2></div>
           <div class="row p-3" v-for="reminder in doneList" :key="reminder.id">
             <Note
               :title="reminder.title"
@@ -118,5 +120,9 @@ export default {
   position: fixed;
   display: block;
   z-index: 9999;
+}
+
+.listTitle {
+  color: whitesmoke;
 }
 </style>
