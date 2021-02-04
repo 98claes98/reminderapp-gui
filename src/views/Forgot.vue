@@ -15,7 +15,9 @@
       <p id="errorText">Error</p>
     </div>
     <div class="form-group">
-      <button class="btn btn-primary btn-block" @click="recoverAccount">Recover account</button>
+      <button class="btn btn-primary btn-block" @click="recoverAccount">
+        Recover account
+      </button>
     </div>
     <a class="links" href="login">Remember your details? Log in!</a>
   </div>

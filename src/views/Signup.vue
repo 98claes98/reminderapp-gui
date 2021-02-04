@@ -28,7 +28,9 @@
       <p id="errorText">Error</p>
     </div>
     <div class="form-group">
-      <button class="btn btn-primary btn-block" @click="signup">Create account</button>
+      <button class="btn btn-primary btn-block" @click="signup">
+        Create account
+      </button>
     </div>
     <a class="links" href="login">Already have an account? Log in!</a>
   </div>

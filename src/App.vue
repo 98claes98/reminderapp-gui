@@ -14,4 +14,14 @@ body {
   -o-background-size: cover;
   background-size: cover;
 }
+
+.vdatetime {
+  input {
+    width: 100%;
+    border: 1px solid #ced4da;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
+    text-align: center;
+  }
+}
 </style>

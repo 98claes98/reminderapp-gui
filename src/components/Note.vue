@@ -1,34 +1,41 @@
 <template>
-  <div class="container-fluid">
-    <div id="noteBox" class="row square">
+  <div class="container-fluid" id="noteBox">
+    <div class="row text-center">
       <div class="col">
-        <div class="row text-center">
-          <div class="col">
-            <h2>
-              <u>{{title}}</u>
-            </h2>
-          </div>
-        </div>
-        <div v-if="description" class="row text-center">
-          <div class="col">
-            <p>{{description}}</p>
-          </div>
-        </div>
-        <div v-if="date" class="row text-center">
-          <div class="col">
-            <p id="date">{{date}}</p>
-          </div>
-        </div>
+        <h2>
+          <u>{{ title }}</u>
+        </h2>
+      </div>
+    </div>
+    <div v-if="description" class="row text-center">
+      <div class="col">
+        <p>{{ description }}</p>
+      </div>
+    </div>
+    <div v-if="date" class="row text-center">
+      <div class="col">
+        <p id="date">
+          {{ localDate }}
+        </p>
+        <p id="date">
+          {{ date }}
+        </p>
       </div>
     </div>
   </div>
 </template>
 <script>
+import moment from "moment";
 export default {
   props: {
     title: String,
     description: String,
     date: String,
+  },
+  computed: {
+    localDate: function () {
+      return moment.utc(this.date).local().format("YYYY-MM-DD HH:mm");
+    },
   },
 };
 </script>
