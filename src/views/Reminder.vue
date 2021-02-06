@@ -24,7 +24,9 @@
       </nav>
       <div class="row justify-content-center pt-2">
         <div class="col-sm-12 col-md-6 col-lg-5 col-xl-5 col-xxl-4">
-          <div class="listTitle text-center"><h2>Todo</h2></div>
+          <div class="listTitle text-center">
+            <h2 class="noselect">Todo</h2>
+          </div>
           <div
             class="row p-3 reminderBox"
             v-for="reminder in todoList"
@@ -45,7 +47,9 @@
         <div
           class="col-sm-12 col-md-6 col-lg-5 col-xl-5 col-xxl-4 offset-lg-2 offset-xl-2 offset-xxl-2"
         >
-          <div class="listTitle text-center"><h2>Done</h2></div>
+          <div class="listTitle text-center">
+            <h2 class="noselect">Done</h2>
+          </div>
           <div
             class="row p-3 reminderBox"
             v-for="reminder in doneList"
@@ -189,5 +193,14 @@ export default {
     color: rgb(0, 0, 0);
     transform: scale(1.05);
   }
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
 }
 </style>

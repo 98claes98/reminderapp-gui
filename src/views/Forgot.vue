@@ -1,25 +1,25 @@
 <template>
   <div class="form">
-    <h2 class="sr-only">Recover Account</h2>
+    <h2 class="sr-only noselect">Recover Account</h2>
     <div class="form-group">
       <input
         id="emailInput"
         v-model="user.email"
         autocomplete="off"
-        class="form-control"
+        class="form-control noselect"
         type="text"
         placeholder="Email"
         @input="resetErrorColors"
         @keyup.enter="recoverAccount"
       />
-      <p id="errorText">Error</p>
+      <p class="noselect" id="errorText">Error</p>
     </div>
     <div class="form-group">
       <button class="btn btn-primary btn-block" @click="recoverAccount">
         Recover account
       </button>
     </div>
-    <a class="links" href="login">Remember your details? Log in!</a>
+    <a class="links noselect" href="login">Remember your details? Log in!</a>
   </div>
 </template>
 
@@ -67,6 +67,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.noselect {
+  overflow-wrap: break-word;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
 .form {
   max-width: 320px;
   height: 443px;
